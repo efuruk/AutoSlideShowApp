@@ -27,6 +27,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
 
+    private Button playbutton1;
+    private Button reversebutton1;
+    private Button stopbutton1;
+    private ImageView imageView1;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageView1.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 getContentsInfo();
             } else {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_CODE);
@@ -55,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch(requestCode){
+        switch (requestCode) {
             case PERMISSIONS_REQUEST_CODE:
-                if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getContentsInfo();
                 }
                 break;
@@ -65,24 +72,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-private void getContentsInfo() {
-    ContentResolver resolver = getContentResolver();
-    Cursor cursor = resolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            null,
-            null,
-            null,
-            null
-    );
-    if(cursor.moveToFirst()) {
-        int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-        Long id = cursor.getLong(fieldIndex);
-        Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-        ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
-        imageView1.setImageURI(imageUri);
+    private void getContentsInfo() {
+        ContentResolver resolver = getContentResolver();
+        Cursor cursor = resolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        if (cursor.moveToFirst()) {
+            int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+            Long id = cursor.getLong(fieldIndex);
+            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+            ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
+            imageView1.setImageURI(imageUri);
+        }
+        cursor.close();
     }
-    cursor.close();
-}
 
+    @Override
+    public void onClick(View view) {
+        if (view == playbutton1) {
+            stopbutton1.setText("ストップ");
+
+        } else if (view == reversebutton1) {
+            stopbutton1.setText("ボタン");
+
+        } else if (view == stopbutton1) {
+            stopbutton1.setText("停止");
+        }
+    }
 }
