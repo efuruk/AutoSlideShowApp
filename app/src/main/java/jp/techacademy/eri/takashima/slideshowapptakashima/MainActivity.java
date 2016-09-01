@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button reversebutton1;
     private Button stopbutton1;
     private ImageView imageView1;
+    private Timer MyTimer;
+    private TimerTask MyTimerTask;
+    private int count = 0;
+    private Handler mHandler = new Handler();
 
 
 
@@ -96,13 +100,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view == playbutton1) {
-            stopbutton1.setText("ストップ");
+            
+            System.out.println("playbutton1");
 
         } else if (view == reversebutton1) {
-            stopbutton1.setText("ボタン");
+
+            System.out.println("reversebutton1");
 
         } else if (view == stopbutton1) {
             stopbutton1.setText("停止");
+            playbutton1.setEnabled(false);
+            reversebutton1.setEnabled(false);
+            System.out.println("stopbutton1");
         }
     }
 }
