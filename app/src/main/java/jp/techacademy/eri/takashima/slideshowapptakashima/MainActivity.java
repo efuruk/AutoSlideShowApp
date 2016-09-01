@@ -94,20 +94,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
             imageView1.setImageURI(imageUri);
         }
-        cursor.close();
     }
 
     @Override
     public void onClick(View view) {
-        if (view == playbutton1) {
-            
-            System.out.println("playbutton1");
+        if (view.getId() == R.id.playbutton1) {
+                ContentResolver resolver = getContentResolver();
+                Cursor cursor = resolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+                if(cursor.moveToNext()){
+                int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+                Long id = cursor.getLong(fieldIndex);
+                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-        } else if (view == reversebutton1) {
+                ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
+                imageView1.setImageURI(imageUri);
+            }
+            cursor.close();
+
+        } else if (view.getId() == R.id.reversebutton1) {
 
             System.out.println("reversebutton1");
 
-        } else if (view == stopbutton1) {
+        } else if (view.getId() == R.id.stopbutton1) {
             stopbutton1.setText("停止");
             playbutton1.setEnabled(false);
             reversebutton1.setEnabled(false);
