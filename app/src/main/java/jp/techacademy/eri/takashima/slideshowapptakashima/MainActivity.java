@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button reversebutton1;
     private Button stopbutton1;
     private ImageView imageView1;
-    private Timer MyTimer;
-    private TimerTask MyTimerTask;
+    private Timer mTimer;
+    private TimerTask mTimerTask;
     private int count = 0;
-    private Handler mHandler = new Handler();
-
+    private Handler mHandler;
+    private Cursor mCursor;
 
 
     @Override
@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stopbutton1.setOnClickListener(this);
         ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
         imageView1.setOnClickListener(this);
+        Handler mHandler = new Handler();
+        Timer mTimer = new Timer();
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -79,16 +82,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getContentsInfo() {
         ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(
+        mCursor = resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 null,
                 null,
                 null,
                 null
         );
-        if (cursor.moveToFirst()) {
-            int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-            Long id = cursor.getLong(fieldIndex);
+        if (mCursor.moveToFirst()) {
+            int fieldIndex = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
+            Long id = mCursor.getLong(fieldIndex);
             Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
             ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
@@ -99,33 +102,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.playbutton1) {
-                ContentResolver resolver = getContentResolver();
-                Cursor cursor = resolver.query(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        null,
-                        null,
-                        null,
-                        null
-                );
-                if(cursor.moveToNext()){
-                int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-                Long id = cursor.getLong(fieldIndex);
-                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            mCursor.moveToNext();
+            int fieldIndex = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
+            Long id = mCursor.getLong(fieldIndex);
+            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-                ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
-                imageView1.setImageURI(imageUri);
+            ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
+            imageView1.setImageURI(imageUri);
+
+            if (mCursor.getPosition() == 5) {
+                mCursor.moveToFirst();
+                int fieldIndex2 = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
+                Long id2 = mCursor.getLong(fieldIndex);
+                Uri imageUri2 = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id2);
+
+                ImageView imageView2 = (ImageView) findViewById(R.id.imageView1);
+                imageView2.setImageURI(imageUri);
             }
-            cursor.close();
-
         } else if (view.getId() == R.id.reversebutton1) {
+            mCursor.moveToPrevious();
+            int fieldIndex = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
+            Long id = mCursor.getLong(fieldIndex);
+            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-            System.out.println("reversebutton1");
+            ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
+            imageView1.setImageURI(imageUri);
 
+            if (mCursor.getPosition() == 0) {
+                mCursor.moveToLast();
+                int fieldIndex2 = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
+                Long id2 = mCursor.getLong(fieldIndex);
+                Uri imageUri2 = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id2);
+
+                ImageView imageView2 = (ImageView) findViewById(R.id.imageView1);
+                imageView2.setImageURI(imageUri);
+            }
         } else if (view.getId() == R.id.stopbutton1) {
-            stopbutton1.setText("停止");
-            playbutton1.setEnabled(false);
             reversebutton1.setEnabled(false);
-            System.out.println("stopbutton1");
+            playbutton1.setEnabled(false);
+            mTimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            playbutton1.performClick();
+                                        }
+                                    });
+                                }
+                            }
+                    , 2000, 2000);
+
+
+            if (view.getId() == R.id.stopbutton1) {
+                mTimer.cancel();
+                mTimer = null;
+                reversebutton1.setEnabled(true);
+                playbutton1.setEnabled(true);
+            }
+
         }
+
     }
 }
+
+
+
+
