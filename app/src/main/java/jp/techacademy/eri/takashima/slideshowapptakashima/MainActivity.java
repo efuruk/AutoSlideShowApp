@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int count = 0;
     private Handler mHandler;
     private Cursor mCursor;
+    private boolean isPlaying = false;
+
+
 
 
     @Override
@@ -138,9 +141,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 imageView2.setImageURI(imageUri);
             }
         } else if (view.getId() == R.id.stopbutton1) {
-            reversebutton1.setEnabled(false);
-            playbutton1.setEnabled(false);
-            mTimer.schedule(new TimerTask() {
+            if (!isPlaying) {
+                isPlaying = true;
+                reversebutton1.setEnabled(false);
+                playbutton1.setEnabled(false);
+                stopbutton1.setText("停止");
+                mTimer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
                                     mHandler.post(new Runnable() {
@@ -152,19 +158,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                             }
                     , 2000, 2000);
-
-
-            if (view.getId() == R.id.stopbutton1) {
+            } else if (isPlaying) {
+                isPlaying = false;
                 mTimer.cancel();
                 mTimer = null;
-                reversebutton1.setEnabled(true);
+                stopbutton1.setText("再生");
                 playbutton1.setEnabled(true);
+                reversebutton1.setEnabled(true);
             }
 
         }
 
     }
+
 }
+
 
 
 
