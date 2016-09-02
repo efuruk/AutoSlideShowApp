@@ -46,16 +46,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button playbutton1 = (Button) findViewById(R.id.playbutton1);
+        playbutton1 = (Button) findViewById(R.id.playbutton1);
         playbutton1.setOnClickListener(this);
-        Button reversebutton1 = (Button) findViewById(R.id.reversebutton1);
+
+        reversebutton1 = (Button) findViewById(R.id.reversebutton1);
         reversebutton1.setOnClickListener(this);
-        Button stopbutton1 = (Button) findViewById(R.id.stopbutton1);
+
+        stopbutton1 = (Button) findViewById(R.id.stopbutton1);
         stopbutton1.setOnClickListener(this);
-        ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
+
+        imageView1 = (ImageView) findViewById(R.id.imageView1);
         imageView1.setOnClickListener(this);
-        Handler mHandler = new Handler();
-        Timer mTimer = new Timer();
+
+        mHandler = new Handler();
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -146,9 +150,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 reversebutton1.setEnabled(false);
                 playbutton1.setEnabled(false);
                 stopbutton1.setText("停止");
+                mTimer = new Timer();
                 mTimer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
+                                    Log.d("TIMER", "Android");
                                     mHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
