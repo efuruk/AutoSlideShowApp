@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int count = 0;
     private Handler mHandler;
     private Cursor mCursor;
-    private boolean isPlaying = false;
+    private boolean isPlaying;
 
 
 
