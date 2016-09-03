@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 getContentsInfo();
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case PERMISSIONS_REQUEST_CODE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getContentsInfo();
+                } else {
+                    Log.d("ANDROID", "不許可");
                 }
                 break;
             default:
@@ -104,12 +108,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
             imageView1.setImageURI(imageUri);
         }
+
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.playbutton1) {
-            mCursor.moveToNext();
+            if (mCursor.moveToNext()) {
             int fieldIndex = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
             Long id = mCursor.getLong(fieldIndex);
             Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
@@ -117,32 +122,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
             imageView1.setImageURI(imageUri);
 
-            if (mCursor.getPosition() == 5) {
+            } else if (mCursor.moveToLast()) {
                 mCursor.moveToFirst();
-                int fieldIndex2 = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
-                Long id2 = mCursor.getLong(fieldIndex);
-                Uri imageUri2 = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id2);
+                int fieldIndex = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
+                Long id = mCursor.getLong(fieldIndex);
+                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-                ImageView imageView2 = (ImageView) findViewById(R.id.imageView1);
-                imageView2.setImageURI(imageUri);
+                ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
+                imageView1.setImageURI(imageUri);
             }
+
+
         } else if (view.getId() == R.id.reversebutton1) {
-            mCursor.moveToPrevious();
-            int fieldIndex = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
-            Long id = mCursor.getLong(fieldIndex);
-            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+            if (mCursor.moveToPrevious()) {
+                int fieldIndex = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
+                Long id = mCursor.getLong(fieldIndex);
+                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-            ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
-            imageView1.setImageURI(imageUri);
+                ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
+                imageView1.setImageURI(imageUri);
 
-            if (mCursor.getPosition() == 0) {
+            } else if (mCursor.moveToFirst()) {
                 mCursor.moveToLast();
-                int fieldIndex2 = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
-                Long id2 = mCursor.getLong(fieldIndex);
-                Uri imageUri2 = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id2);
+                int fieldIndex = mCursor.getColumnIndex(MediaStore.Images.Media._ID);
+                Long id = mCursor.getLong(fieldIndex);
+                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
 
-                ImageView imageView2 = (ImageView) findViewById(R.id.imageView1);
-                imageView2.setImageURI(imageUri);
+                ImageView imageView1 = (ImageView) findViewById(R.id.imageView1);
+                imageView1.setImageURI(imageUri);
             }
         } else if (view.getId() == R.id.stopbutton1) {
             if (!isPlaying) {
