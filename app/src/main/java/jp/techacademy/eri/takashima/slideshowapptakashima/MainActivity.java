@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     getContentsInfo();
                 } else {
                     Log.d("ANDROID", "不許可");
+                    break;
                 }
                 break;
             default:
